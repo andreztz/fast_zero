@@ -1,13 +1,40 @@
-[tool.poetry]
-name = "fast-zero"
-version = "0.1.0"
-description = ""
-authors = ["André P. Santos <andreztz@gmail.com>"]
-readme = "README.md"
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
-[tool.poetry.dependencies]
-python = "3.12.*"
-fastapi = "^0.111.0"
+[project]
+name = "fast-zero"
+dynamic = ["version"]
+description = ''
+readme = "README.md"
+requires-python = ">=3.8"
+license = "MIT"
+keywords = []
+authors = [
+  { name = "André P. Santos", email = "andreztz@gmail.com" },
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = [
+    "fastapi>=0.111.0",
+    "sqlalchemy>=2.0.31"
+]
+[project.urls]
+Documentation = "https://github.com/André P. Santos/fast-zero#readme"
+Issues = "https://github.com/André P. Santos/fast-zero/issues"
+Source = "https://github.com/André P. Santos/fast-zero"
+
+[tool.hatch.version]
+path = "fast_zero/__about__.py"
 
 [tool.pytest.ini_options]
 pythonpath = "."
@@ -21,20 +48,16 @@ extend-exclude = ["migrations"]
 preview = true
 select = ['I', 'F', 'E', 'W', 'PL', 'PT']
 
-[tool.poetry.group.dev.dependencies]
-ruff = "^0.4.8"
-pytest = "^8.2.2"
-pytest-cov = "^5.0.0"
-taskipy = "^1.12.2"
+[tool.hatch.envs.default]
+dependencies = [
+  "pytest>=8.2.2",
+  "pytest-cov>=5.0.0",
+  "ruff>=0.4.8",
+]
 
-[tool.taskipy.tasks]
-lint = 'ruff check . && ruff check . --diff'
-format = 'ruff check . --fix && ruff format .'
-run = 'fastapi dev fast_zero/app.py'
-pre_test = 'task lint'
-test = 'pytest -s -x --cov=fast_zero -vv'
-post_test = 'coverage html'
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[tool.hatch.envs.default.scripts]
+server = "fastapi dev fast_zero/app.py"
+format = "ruff check . --fix && ruff format ."
+lint = "ruff check . && ruff check . --diff"
+test = "pytest {args:tests}"
+test-cov = "pytest -s -x --cov=fast_zero -vv"
