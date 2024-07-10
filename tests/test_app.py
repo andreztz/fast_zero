@@ -78,6 +78,7 @@ def test_delete_user(client, user):
     assert response.json() == {"message": "User deleted"}
 
 
-def test_delete_user_not_found_error(client):
-    response = client.delete("/delete/10")
+def test_delete_user_not_found_error(client, user):
+    response = client.delete("/users/10")
     assert response.status_code == HTTPStatus.NOT_FOUND
+    assert response.json() == {"detail": "User not found"}
