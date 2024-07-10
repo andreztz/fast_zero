@@ -53,6 +53,7 @@ select = ['I', 'F', 'E', 'W', 'PL', 'PT']
 
 [tool.hatch.envs.default]
 dependencies = [
+  "coverage[toml]>=6.5",
   "pytest>=8.2.2",
   "pytest-cov>=5.0.0",
   "ruff>=0.4.8",
@@ -63,4 +64,15 @@ server = "fastapi dev fast_zero/app.py"
 format = "ruff check . --fix && ruff format ."
 lint = "ruff check . && ruff check . --diff"
 test = "pytest {args:tests}"
-test-cov = "pytest -s -x --cov=fast_zero -vv"
+test-cov = "coverage run -m pytest {args:tests}"
+cov-report = [
+  "- coverage combine",
+  "coverage report",
+  "coverage html",
+]
+cov = [
+  "test-cov",
+  "cov-report",
+]
+
+
