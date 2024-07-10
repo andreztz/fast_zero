@@ -36,9 +36,9 @@ def create_user(
     )
     if user:
         detail = None
-        if user.username == user.username:
+        if user.username == user_schema.username:
             detail = "Username already exists."
-        elif user.email == user.email:
+        elif user.email == user_schema.email:
             detail = "Email already exists."
         raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=detail)
 
