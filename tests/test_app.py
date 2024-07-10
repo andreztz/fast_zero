@@ -48,6 +48,12 @@ def test_read_user_with_users(client, user):
     assert response.json() == expected
 
 
+def test_read_user_not_found(client, user):
+    response = client.get("/users/10")
+    assert response.status_code == HTTPStatus.NOT_FOUND
+    assert response.json() == {"detail": "User not found"}
+
+
 def test_update_user(client, user):
     user_public_schema = UserPublic.model_validate(user).model_dump()
     # Input data
