@@ -29,6 +29,9 @@ dependencies = [
     "sqlalchemy>=2.0.31",
     "pydantic-settings>=2.3.4",
     "alembic>=1.13.2",
+    "pwdlib[argon2]",
+    "python-multipart",
+    "pyjwt",
 ]
 
 [project.urls]
