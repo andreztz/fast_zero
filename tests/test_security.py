@@ -5,17 +5,18 @@ from fastapi import HTTPException
 from jwt import decode
 
 from fast_zero.security import (
-    ALGORITHM,
-    SECRET_KEY,
     create_access_token,
     get_current_user,
 )
+from fast_zero.settings import Settings
+
+settings = Settings()
 
 
 def test_jwt():
     data = {"sub": "test@mail.com"}
     token = create_access_token(data)
-    result = decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+    result = decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
     assert result["sub"] == data["sub"]
     assert result["exp"]
 
