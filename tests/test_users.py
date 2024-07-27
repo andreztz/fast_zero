@@ -86,7 +86,9 @@ def test_update_user(client, user, token):
     assert response.json() == expected
 
 
-def test_update_user_no_permissions_returns_forbidden(client, token):
+def test_update_user_no_permissions_returns_forbidden(
+    client, other_user, token
+):
     """Updating a user without permissions returns FORBIDDEN status"""
     headers = {
         "Authorization": f"Bearer {token}",
@@ -99,7 +101,7 @@ def test_update_user_no_permissions_returns_forbidden(client, token):
         "password": "super_secret",
     }
     response = client.put(
-        f"/users/{data.get('id')}", json=data, headers=headers
+        f"/users/{other_user.id}", json=data, headers=headers
     )
     assert response.status_code == HTTPStatus.FORBIDDEN
 
@@ -111,9 +113,11 @@ def test_delete_user(client, user, token):
     assert response.json() == {"message": "User deleted"}
 
 
-def test_delete_user_no_permissions_returns_forbidden(client, token):
+def test_delete_user_no_permissions_returns_forbidden(
+    client, other_user, token
+):
     """Deleting a user without permissions returns FORBIDDEN status"""
     headers = {"Authorization": f"Bearer {token}"}
-    response = client.delete("/users/10", headers=headers)
+    response = client.delete(f"/users/{other_user.id}", headers=headers)
     assert response.status_code == HTTPStatus.FORBIDDEN
     assert response.json() == {"detail": "Not enough permissions"}

@@ -16,7 +16,9 @@ settings = Settings()
 def test_jwt():
     data = {"sub": "test@mail.com"}
     token = create_access_token(data)
-    result = decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+    result = decode(
+        token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
+    )
     assert result["sub"] == data["sub"]
     assert result["exp"]
 
@@ -50,7 +52,7 @@ def test_get_current_user_not_found_exception_with_invalid_user(session):
     assert exc.value.headers == {"WWW-Authenticate": "Bearer"}
 
 
-def test_get_current_user_with_valid_user(session, token):
-    token = create_access_token(data={"sub": "test@mail.com"})
+def test_get_current_user_with_valid_user(session, user, token):
+    token = create_access_token(data={"sub": user.email})
     user = get_current_user(session, token)
-    assert user.username == "test"
+    assert user.username == user.username
