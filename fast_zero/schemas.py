@@ -44,13 +44,17 @@ class TodoUpdateSchema(BaseModel):
 
 
 class TodoSchema(BaseModel):
+    """Todo input data model"""
     title: str
     description: str
     state: TodoState
 
 
 class TodoPublicSchema(TodoSchema):
+    """Public todo response data model"""
     id: int
+    created_at: datetime
+    updated_at: datetime
 
 
 class TodoListSchema(BaseModel):
