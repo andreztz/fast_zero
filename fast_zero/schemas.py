@@ -13,10 +13,6 @@ class UserSchema(BaseModel):
     password: str
 
 
-class UserDB(UserSchema):
-    id: int
-
-
 class UserPublic(BaseModel):
     id: int
     username: str
@@ -33,6 +29,12 @@ class Token(BaseModel):
     token_type: str
 
 
+class TodoUpdateSchema(BaseModel):
+    title: str | None = None
+    description: str | None = None
+    state: str | None = None
+
+
 class TodoSchema(BaseModel):
     title: str
     description: str
@@ -45,12 +47,6 @@ class TodoPublicSchema(TodoSchema):
 
 class TodoListSchema(BaseModel):
     todos: list[TodoPublicSchema]
-
-
-class TodoUpdateSchema(BaseModel):
-    title: str | None = None
-    description: str | None = None
-    state: str | None = None
 
 
 class TokenData(BaseModel):
