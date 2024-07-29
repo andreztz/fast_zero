@@ -1,3 +1,4 @@
+from datetime import datetime
 from http import HTTPStatus
 
 from fast_zero.schemas import UserPublic
@@ -12,11 +13,14 @@ def test_create_user(client):
 
     response = client.post("/users/", json=data)
     assert response.status_code == HTTPStatus.CREATED
-    assert response.json() == {
-        "id": 1,
-        "username": "Test",
-        "email": "test@mail.com",
-    }
+    response_data = response.json()
+    assert response_data["id"] == 1
+    assert response_data["username"] == "Test"
+    assert response_data["email"] == "test@mail.com"
+    assert "created_at" in response_data
+    assert "updated_at" in response_data
+    assert datetime.fromisoformat(response_data["created_at"])
+    assert datetime.fromisoformat(response_data["created_at"])
 
 
 def test_create_user_already_exists(client, user):
@@ -42,14 +46,23 @@ def test_create_user_already_exists(client, user):
 
 
 def test_read_user(client, user):
+    """Test UserPublic response"""
     user_public_schema = UserPublic.model_validate(user).model_dump()
     expected = user_public_schema
     response = client.get(f"/users/{user_public_schema.get('id')}")
     assert response.status_code == HTTPStatus.OK
-    assert response.json() == expected
+    response_data = response.json()
+    assert response_data["id"] == expected["id"]
+    assert response_data["username"] == expected["username"]
+    assert response_data["email"] == expected["email"]
+    assert "created_at" in response_data
+    assert "updated_at" in response_data
+    assert datetime.fromisoformat(response_data["created_at"])
+    assert datetime.fromisoformat(response_data["updated_at"])
 
 
 def test_read_users(client):
+    """Test UserList response"""
     expected = {"users": []}
     response = client.get("/users/")
     assert response.status_code == HTTPStatus.OK
@@ -57,11 +70,20 @@ def test_read_users(client):
 
 
 def test_read_user_with_users(client, user):
-    user_public_schema = UserPublic.model_validate(user).model_dump()
-    expected = {"users": [user_public_schema]}
     response = client.get("/users/")
     assert response.status_code == HTTPStatus.OK
-    assert response.json() == expected
+    response_data = response.json()
+    assert "users" in response_data
+    assert isinstance(response_data["users"], list)
+    assert len(response_data["users"]) > 0
+    returned_user = response_data["users"][0]
+    assert returned_user["id"] == user.id
+    assert returned_user["username"] == user.username
+    assert returned_user["email"] == user.email
+    assert "created_at" in returned_user
+    assert "updated_at" in returned_user
+    datetime.fromisoformat(returned_user["created_at"])
+    datetime.fromisoformat(returned_user["updated_at"])
 
 
 def test_read_user_not_found(client, user):
@@ -80,10 +102,12 @@ def test_update_user(client, user, token):
         "password": "new_super_secret_password",
     }
     expected = {"username": "test", "email": "test@mail.com", "id": user.id}
-
     response = client.put(f"/users/{user.id}", json=data, headers=headers)
     assert response.status_code == HTTPStatus.OK
-    assert response.json() == expected
+    response_data = response.json()
+    assert response_data["id"] == expected["id"]
+    assert response_data["username"] == expected["username"]
+    assert response_data["email"] == expected["email"]
 
 
 def test_update_user_no_permissions_returns_forbidden(

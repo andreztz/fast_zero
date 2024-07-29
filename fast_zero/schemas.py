@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from pydantic import BaseModel, ConfigDict, EmailStr
 
 from fast_zero.models import TodoState
@@ -8,15 +10,21 @@ class Message(BaseModel):
 
 
 class UserSchema(BaseModel):
+    """User input data model"""
+
     username: str
     email: EmailStr
     password: str
 
 
 class UserPublic(BaseModel):
+    """Public user response data model"""
+
     id: int
     username: str
     email: EmailStr
+    created_at: datetime
+    updated_at: datetime
     model_config = ConfigDict(from_attributes=True)
 
 
