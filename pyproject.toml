@@ -62,6 +62,7 @@ dependencies = [
   "ruff>=0.4.8",
   "factory-boy",
   "freezegun",
+  "testcontainers",
 ]
 
 [tool.hatch.envs.default.scripts]
@@ -79,5 +80,3 @@ cov = [
   "test-cov",
   "cov-report",
 ]
-
-
