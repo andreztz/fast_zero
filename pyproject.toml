@@ -32,6 +32,7 @@ dependencies = [
     "pwdlib[argon2]",
     "python-multipart",
     "pyjwt",
+    "psycopg[binary]",
 ]
 
 [project.urls]
